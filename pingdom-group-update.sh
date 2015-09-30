@@ -19,7 +19,7 @@ echo "Fetching new pingdom probe ips..."
 curl https://my.pingdom.com/probes/feed > $out
 
 echo "Parsing IPs..."
-grep pingdom:ip /tmp/pingdom.xml |sed 's/<\/*pingdom:ip>//g' > $ips
+grep pingdom:ip /tmp/pingdom.xml | sed -n 's:.*<pingdom\:ip>\(.*\)</pingdom\:ip>.*:\1:p' > $ips
 lines=`cat $ips`
 
 # TODO: handle duplicates or delete all first
@@ -28,6 +28,6 @@ lines=`cat $ips`
 # see: http://docs.amazonwebservices.com/AWSEC2/latest/CommandLineReference/ApiReference-cmd-AuthorizeSecurityGroupIngress.html
 echo "Adding IPs to security group: $group"
 for ip in $lines ; do
-  ec2-authorize $group -P tcp -p $port -s $ip/32
+	aws ec2 authorize-security-group-ingress --group-id $group --cidr $ip/32 --port $port --protocol tcp
 done
 
