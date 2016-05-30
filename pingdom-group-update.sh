@@ -37,8 +37,6 @@ echo "Parsing IPs..."
 grep pingdom:ip /tmp/pingdom.xml | sed -n 's:.*<pingdom\:ip>\(.*\)</pingdom\:ip>.*:\1:p' > $ips
 lines=`cat $ips`
 
-# TODO: handle duplicates or delete all first
-
 # for each ip, call the ec2 cli to add ips to a predefined pingdom only security group
 # see: http://docs.amazonwebservices.com/AWSEC2/latest/CommandLineReference/ApiReference-cmd-AuthorizeSecurityGroupIngress.html
 echo "Adding IPs to security group: $group"
