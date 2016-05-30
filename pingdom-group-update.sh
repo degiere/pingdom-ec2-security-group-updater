@@ -18,8 +18,8 @@ old_ports=/tmp/pingdom-old-ports.txt
 ips=/tmp/pingdom-ips.txt
 
 echo "Fetching old IPs in security group..."
-aws ec2 describe-security-groups --group-id sg-f0c07197 --query 'SecurityGroups[*].{Inbound:IpPermissions}' | grep FromPort | cut -d: -f2 | rev | cut -c 3- | rev > $old_ports
-aws ec2 describe-security-groups --group-id sg-f0c07197 --query 'SecurityGroups[*].{Inbound:IpPermissions}' | grep CidrIp | cut -d: -f2 | cut -c 3- | rev | cut -c 2- | rev > $old_ips
+aws ec2 describe-security-groups --group-id $group --query 'SecurityGroups[*].{Inbound:IpPermissions}' | grep FromPort | cut -d: -f2 | rev | cut -c 3- | rev > $old_ports
+aws ec2 describe-security-groups --group-id $group --query 'SecurityGroups[*].{Inbound:IpPermissions}' | grep CidrIp | cut -d: -f2 | cut -c 3- | rev | cut -c 2- | rev > $old_ips
 
 old_ip_count=`cat $old_ips | wc -l`
 
